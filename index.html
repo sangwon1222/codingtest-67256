@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width,initial-scale=1.0">
+    <title>코딩테스트</title>
+  </head>
+  <body>
+    <div id="app">
+	</div>
+
+	<script>
+		const handPos = { left: '*', right: '#' }
+  const keypad = {
+	1: { x: 0, y: 0 },  2: { x: 1, y: 0 }, 3: { x: 2, y: 0 },
+	4: { x: 0, y: 1 },  5: { x: 1, y: 1 },  6: { x: 2, y: 1 },
+	7: { x: 0, y: 2 },  8: { x: 1, y: 2 },  9: { x: 2, y: 2 },
+	'*': { x: 0, y: 3 },  0: { x: 1, y: 3 },  '#': { x: 2, y: 3 },
+  }
+  
+  function solution(numbers, hand) {
+	let answer = ''
+	const mainHand = hand[0].toUpperCase()
+
+	for (const num of numbers) {
+	  if ([1, 4, 7].includes(num)) {
+		handPos.left = num
+		answer += 'L'
+		continue
+	  }
+	  if ([3, 6, 9].includes(num)) {
+		handPos.right = num
+		answer += 'R'
+		continue
+	  }
+	  const { left, right } = handPos
+	  const leftDistance = 
+			Math.ceil(
+			  Math.sqrt(
+				  Math.pow(keypad[num].x - keypad[left].x, 2) +
+				  Math.pow(keypad[num].y - keypad[left].y, 2),
+			  )
+		  )
+	  const rightDistance = 
+			Math.ceil(
+				Math.sqrt(
+				  Math.pow(keypad[num].x - keypad[right].x, 2) +
+				  Math.pow(keypad[num].y - keypad[right].y, 2),
+			  )
+		  )
+
+	  if (leftDistance === rightDistance) {
+		handPos[hand] = num
+		answer += mainHand
+		continue
+	  }
+	  if (leftDistance > rightDistance) {
+		handPos.right = num
+		answer += 'R'
+		continue
+	  }
+	  if (leftDistance < rightDistance) {
+		handPos.left = num
+		answer += 'L'
+		continue
+	  }
+	}
+	return answer
+  }
+
+  const result = solution([1, 2, 3, 4, 5, 6, 7, 8, 9, 0], "right")
+  document.getElementById('app').innerHTML = `input => [1, 2, 3, 4, 5, 6, 7, 8, 9, 0], "right" / result => ${result}`
+  </script>
+  </body>
+</html>
